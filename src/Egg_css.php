@@ -12,8 +12,10 @@ class Egg_css
 {
 protected $css = '';
 public $framework_dir;
-function __construct ($theme = ROOT.'/style/default_theme.php',  $framework_dir=ROOT.'/../views/mdc/', $yoke='base')
+
+function __construct ($theme = ROOT.'/www/theme.php',  $framework_dir=CSS, $yoke='base')
 {
+
 
 //some default settings to simplify the construction of the framework.
 // load_variables()
@@ -23,9 +25,9 @@ function __construct ($theme = ROOT.'/style/default_theme.php',  $framework_dir=
 
 // by design only the colours given names in the css theme are available to the classes.
 $this->framework_dir=$framework_dir;
-include($framework_dir.'colours.php'); // loads $red $blue etc
-include($framework_dir.'elevation.php'); // loads $z[ ]
-include($theme); // loads css_theme
+include($framework_dir.'/colours.php'); // loads $red $blue etc
+include($framework_dir.'/elevation.php'); // loads $z[ ]
+include_once($theme);
 
 $this->theme = $t;
 $this->elevation = $z;
@@ -36,10 +38,15 @@ $this->appendCssFile($yoke);
 }
 
 //Egg White -  css files used intermittently
-function appendCssFile($css_file)
+function appendCssFile($css_file, $dir='')
 {
-  $css_file=$this->framework_dir.$css_file.'.css';
-  //$css = file_get_contents($css_file);
+$css_file=$this->framework_dir.'/'.$css_file.'.css';
+
+if (!empty ($dir)){
+    $css_file=$dir.'/'.$css_file.'.css';
+    }
+
+//$css = file_get_contents($css_file);
 
   $z=$this->elevation;
   $t=$this->theme;
