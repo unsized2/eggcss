@@ -15,7 +15,7 @@ public $framework_dir;
 
 function __construct ($theme = ROOT.'/www/theme.php',  $framework_dir=CSS, $yoke='base')
 {
-
+ 
 
 //some default settings to simplify the construction of the framework.
 // load_variables()
