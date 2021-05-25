@@ -1,55 +1,62 @@
 <?php namespace unsized\eggcss;
-
 /***A Css builder, to construct a minimised CSS file unique to every page.
 *****Construct only the css required to display the content. Remove the bloat!! ***/
 
 /***Not intended for production. A fast way of getting pages working.
-
 Then use tools to clean & minify css and output a css file for every page. ***/
 //can do it on the fly!
 
 class Egg_css
 {
-protected $css = '';
-public $framework_dir;
+private $theme_dir = ROOT.'/www';
+private $style_dir = FRONT_END; //from .env file
 
-function __construct ($theme = ROOT.'/www/theme.php',  $framework_dir=CSS, $yoke='base')
+//library of colors, shapes, elevations
+private $framework;
+private $theme;
+protected $css = '';
+
+
+function __construct ($theme='purple_theme', $framework='/cardboard')  // = THEME.'/theme.php,  $css_dir=CSS, $yoke='base')
 {
- 
+//echo $this->style_dir;
+$this->theme = $this->theme_dir.'/'.$theme.'.php';
 
 //some default settings to simplify the construction of the framework.
 // load_variables()
 // load assignColours
 // assignElevation
 //DEFINE ('COLOUR_PALLET', ROOT.'/../views/mdc/colours.php');
-
 // by design only the colours given names in the css theme are available to the classes.
-$this->framework_dir=$framework_dir;
-include($framework_dir.'/colours.php'); // loads $red $blue etc
-include($framework_dir.'/elevation.php'); // loads $z[ ]
-include_once($theme);
+$framework_dir= $this->style_dir.$framework;
 
-$this->theme = $t;
-$this->elevation = $z;
+$this->css_dir=$framework_dir.'/css';
 
+include_once($framework_dir.'/variables/colours.php'); // loads $red $blue etc
+include_once($framework_dir.'/variables/elevation.php'); // loads $z[ ]
+include_once($this->theme);
+
+$this->t = $t;
+$this->z = $z;
+
+//To do: Build a yoke from an array. (config file in framework_dir)
+$yoke='base';
 $this->appendCssFile($yoke);
 //start construction of css file by adding the yoke.
-
 }
 
 //Egg White -  css files used intermittently
 function appendCssFile($css_file, $dir='')
 {
-$css_file=$this->framework_dir.'/'.$css_file.'.css';
+$css_file=$this->css_dir.'/'.$css_file.'.css';
 
 if (!empty ($dir)){
     $css_file=$dir.'/'.$css_file.'.css';
     }
 
 //$css = file_get_contents($css_file);
-
-  $z=$this->elevation;
-  $t=$this->theme;
+  $z=$this->z;
+  $t=$this->t;
   extract ($t); //make variables available in theme directly
   //$css=file_get_contents($css_file);
 
@@ -98,7 +105,9 @@ $f_size = number_format($k_size, 1, '.', ',').'KiB';
 return $f_size;
 }
 
+
 //appends css if file has not already been loaded.
+/* Deprecate
 function css_import($file, $path = ROOT.'/../views/mdc/')
 {
 $css='';
@@ -106,5 +115,6 @@ extract (CSS_THEME);
 require_once($path.$file.'.php'); //file returns the css variable for inclusion
 return $css;
 }
+*/
 
 } //end egg_css
